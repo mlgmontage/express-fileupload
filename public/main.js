@@ -5,7 +5,7 @@ async function load_file_list() {
   const { data } = await response.json();
 
   for (let i = 0; i < data.length; i++) {
-    list.innerHTML += `<a href="/${data[i]}">${data[i]}</a><br>`;
+    list.innerHTML += `<a href="/${data[i]}">${data[i]}</a><a href="/delete/${data[i]}">delete</a><br>`;
   }
 }
 

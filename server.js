@@ -29,6 +29,7 @@ app.use(
 app.use(express.static("uploads"));
 app.use(express.static("public"));
 
+// file uploading
 app.post("/upload", (req, res) => {
   try {
     if (!req.files) {
@@ -56,6 +57,24 @@ app.post("/upload", (req, res) => {
   } catch (err) {
     res.send(err);
   }
+});
+
+app.get("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const filepath = `./uploads/${id}`;
+  fs.access(filepath, (error) => {
+    if (!error) {
+      fs.unlink(filepath, (error) => {
+        console.log(error);
+      });
+    } else {
+      console.log(error);
+    }
+  });
+  res.send({
+    status: true,
+    message: "File has been deleted",
+  });
 });
 
 app.get("/loadlist", (req, res) => {
