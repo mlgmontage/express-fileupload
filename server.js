@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyPaser = require("body-parser");
 const morgan = require("morgan");
 const _ = require("lodash");
+const fs = require("fs");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(bodyPaser.json());
 app.use(bodyPaser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static("uploads"));
+app.use(express.static("public"));
 
 app.post("/upload", (req, res) => {
   try {
@@ -28,8 +30,8 @@ app.post("/upload", (req, res) => {
       });
     }
     const data = [];
-    _.forEach(_.keysIn(req.files.photo), (key) => {
-      let photo = req.files.photo[key];
+    _.forEach(_.keysIn(req.files), (key) => {
+      let photo = req.files[key];
       photo.mv("./uploads/" + photo.name);
       data.push({
         name: photo.name,
@@ -46,6 +48,12 @@ app.post("/upload", (req, res) => {
   } catch (err) {
     res.send(err);
   }
+});
+
+app.get("/loadlist", (req, res) => {
+  fs.readdir("./uploads", (err, files) => {
+    res.send({ data: files });
+  });
 });
 
 const port = process.env.PORT || 3000;
