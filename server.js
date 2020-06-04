@@ -5,6 +5,7 @@ const bodyPaser = require("body-parser");
 const morgan = require("morgan");
 const _ = require("lodash");
 const fs = require("fs");
+const session = require("express-session");
 
 const app = express();
 
@@ -18,6 +19,13 @@ app.use(cors());
 app.use(bodyPaser.json());
 app.use(bodyPaser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(
+  session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 app.use(express.static("uploads"));
 app.use(express.static("public"));
 
